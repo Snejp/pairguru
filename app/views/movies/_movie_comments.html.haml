@@ -1,0 +1,32 @@
+.row
+  .comments.col-md-8.col-md-offset-2.col-lg-8.col-lg-offset-2
+    .page-header
+      %h1
+        %small.pull-right
+          = "#{movie.number_of_comments} comments"
+        = 'Comments'
+
+    .comments-list
+      - if user_can_comment
+        .media
+          = form_for :comment, url: {controller:"comments" ,action: "create"}, html: {multipart: true} do |f|
+            #forumDiv
+              = f.text_area :content, :class => 'autoExpand forumPost form-control', rows: 4, data_min_rows: 4, placeholder: 'Enter your message here'
+            %br
+            = f.submit "Post", :class => 'forumPostButton btn btn-default'
+            %p
+
+      - comments.each_with_index do |comment, i|
+        .media
+          %p.pull-right
+            - if comment.belogs_to(current_user)
+              = link_to 'Delete your comment', comment_path(comment),  method: :delete, data: { confirm: 'Are you sure?' }
+            %small
+              = time_ago_in_words(comment.created_at) + " ago"
+          %a.media-left
+            %img{ src: comment.user_avatar }
+          .media-body
+            #h4.media-heading.user_name
+              = comment.user.name
+            = simple_format(comment.content)
+          %p

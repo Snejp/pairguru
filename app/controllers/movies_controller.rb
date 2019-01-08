@@ -6,7 +6,13 @@ class MoviesController < ApplicationController
   end
 
   def show
-    @movie = Movie.find(params[:id])
+    @movie = Movie.find(params[:id]).decorate
+    @comments = @movie.comments
+    @user_can_comment = if current_user then
+      @comments.select{|x| x.user_id == current_user.id}.empty?
+    else
+      false
+    end
   end
 
   def send_info

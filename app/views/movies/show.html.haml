@@ -3,3 +3,6 @@
   = @movie.description
 - if user_signed_in?
   %p= link_to 'Email me details about this movie', send_info_movie_path(@movie), class: 'btn btn-sm btn-default'
+= render 'movie_comments', movie: @movie, comments: @comments, user_can_comment: @user_can_comment
+%div{ style: "margin-bottom:20px" }
+
